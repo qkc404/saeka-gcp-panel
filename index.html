@@ -593,11 +593,11 @@
                 DOM.fetchOverlay.classList.add('active');
                 
                 // Animation Sequence
-                DOM.fetchText.textContent = "SCANNING QWIKLABS REGIONS...";
+                DOM.fetchText.textContent = "SCANNING FOR AVAILABLE LIVE SERVERS...";
                 await sleep(800);
-                DOM.fetchText.textContent = "CONTACTING REPOSITORY DATASTORE...";
+                DOM.fetchText.textContent = "CONTACTING DATABASE...";
                 await sleep(800);
-                DOM.fetchText.textContent = "RESOLVING HOST.TXT...";
+                DOM.fetchText.textContent = "RESOLVING API...";
                 
                 // Real Fetch Attempt
                 let hostResult = null;
@@ -631,7 +631,7 @@
                     Toast.show("GCP Backend Synced Successfully!", "success");
                 } else {
                     // Fallback if no host.txt
-                    DOM.fetchText.textContent = "FETCH FAILED. NO HOST.TXT FOUND.";
+                    DOM.fetchText.textContent = "FETCH TO FAILED. NO LIVE SERVER FOUND.";
                     DOM.fetchText.style.color = "var(--status-err)";
                     await sleep(1500);
                     
