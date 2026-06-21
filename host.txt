@@ -1,2 +1,1 @@
-eks-565716924315.us-central1.run.app
-rvtspyyy-415377108057.us-central1.run.app
+
