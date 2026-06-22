@@ -806,7 +806,7 @@
                 const letterBank = ["S", "A", "E", "K", "A", "T", "O", "J", "I", "R", "P"];
 
                 function structuralResize() { DOM.canvas.width = window.innerWidth; DOM.canvas.height = window.innerHeight; }
-                structuralResize();
+                structuralResize(); window.addEventListener('resize', structuralResize);
 
                 class WireframeCube3D {
                     constructor() { this.resetPosition(); this.y = Math.random() * DOM.canvas.height; }
@@ -908,6 +908,34 @@
                 } catch(e) {
                     return false;
                 }
+            }
+
+            const HostDurationManager = {
+                DURATION_MS: 5 * 60 * 60 * 1000, 
+                serverBirthTime: null, 
+
+                startCountdown: () => {
+                    const osLabel = DOM.envOs.previousElementSibling;
+                    osLabel.textContent = "SERVER DURATION"; 
+                    
+                    if (window.activeCountdown) clearInterval(window.activeCountdown);
+                    
+                    window.activeCountdown = setInterval(() => {
+                        const remaining = HostDurationManager.DURATION_MS - (Date.now() - HostDurationManager.serverBirthTime);
+                        
+                        if (remaining <= 0) {
+                            DOM.envOs.textContent = "0H 0M 0S (EXPIRED)";
+                            DOM.envOs.style.color = "var(--status-err)";
+                            clearInterval(window.activeCountdown);
+                        } else {
+                            const h = Math.floor(remaining / 3600000);
+                            const m = Math.floor((remaining % 3600000) / 60000);
+                            const s = Math.floor((remaining % 60000) / 1000);
+                            DOM.envOs.textContent = `${h}H ${m}M ${s}S`;
+                            DOM.envOs.style.color = "var(--status-warn)";
+                        }
+                    }, 1000);
+                }
             };
 
             DOM.btnFetchTrigger.addEventListener('click', async () => {
@@ -917,47 +945,30 @@
                 
                 let rawRecords = [];
                 try {
-                    // --- GITHUB API INTEGRATION ---
-                    // IMPORTANT: Replace these with your actual GitHub details
-                    const GITHUB_USERNAME = "Saeka-Tojirp"; // <-- CHANGE THIS
-                    const GITHUB_REPO = "Your-Repo-Name";  // <-- CHANGE THIS
-
-                    DOM.fetchOverlayText.textContent = "𝗩𝗘𝗥𝗜𝗙𝗬𝗜𝗡𝗚 𝗔𝗣𝗜 𝗖𝗢𝗡𝗡𝗘𝗖𝗧𝗜𝗢𝗡";
-                    
-                    // Fetch the exact commit time of host.txt
-                    const gitRes = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/commits?path=host.txt&page=1&per_page=1`);
-                    if (gitRes.ok) {
-                        const gitData = await gitRes.json();
-                        if (gitData && gitData.length > 0) {
-                            // Extract the UTC timestamp of the commit
-                            HostDurationManager.serverBirthTime = new Date(gitData.commit.committer.date).getTime();
-                        }
-                    }
-
-                    // Fallback just in case GitHub API limits us (60 req/hr for unauthenticated IP)
-                    if (!HostDurationManager.serverBirthTime) {
-                        console.warn("API limit reached or repo not found. Timer fallback triggered.");
-                        HostDurationManager.serverBirthTime = Date.now();
-                    }
-
-                    DOM.fetchOverlayText.textContent = "𝗙𝗘𝗧𝗖𝗛𝗜𝗡𝗚 𝗚𝗖𝗣 𝗦𝗘𝗥𝗩𝗘𝗥𝗦...";
                     const res = await fetch('./host.txt?nocache=' + Date.now(), { cache: "no-store" });
                     if (res.ok) { 
+                        const lastModifiedHeader = res.headers.get('Last-Modified');
+                        if (lastModifiedHeader) {
+                            HostDurationManager.serverBirthTime = new Date(lastModifiedHeader).getTime();
+                        } else {
+                            console.warn("Server did not send Last-Modified header. Falling back to current time.");
+                            HostDurationManager.serverBirthTime = Date.now();
+                        }
+
                         rawRecords = (await res.text()).split('\n').map(s => s.trim()).filter(s => s.length > 0 && s.includes('.run.app'));
                     }
                 } catch (e) { }
 
-                // Check if the commit timestamp is older than 5 hours
                 const isExpired = HostDurationManager.serverBirthTime ? (Date.now() - HostDurationManager.serverBirthTime) >= HostDurationManager.DURATION_MS : false;
 
                 if (rawRecords.length === 0 || isExpired) {
                     DOM.fetchOverlayText.textContent = "𝗡𝗢 𝗔𝗖𝗧𝗜𝗩𝗘 𝗢𝗥 𝗩𝗔𝗟𝗜𝗗 𝗚𝗖𝗣 𝗦𝗘𝗥𝗩𝗘𝗥𝗦 𝗙𝗢𝗨𝗡𝗗";
                     await new Promise(r => setTimeout(r, 1500));
                     DOM.fetchOverlay.classList.remove('active');
-                    return ToastMessageFactory.dispatch("𝗙𝗔𝗜𝗟𝗘𝗗 𝗧𝗢 𝗘𝗦𝗧𝗔𝗕𝗟𝗜𝗦𝗛 𝗔 𝗦𝗘𝗖𝗨𝗥𝗘 𝗚𝗖𝗣 𝗔𝗣𝗜 𝗖𝗔𝗟𝗟.", "error");
+                    return ToastMessageFactory.dispatch("NO VALID SERVERS FOUND OR ALL EXPIRED.", "error");
                 }
 
-                DOM.fetchOverlayText.textContent = `𝗩𝗘𝗥𝗜𝗙𝗬𝗜𝗡𝗚 ${rawRecords.length} 𝗚𝗖𝗣 𝗦𝗘𝗥𝗩𝗘𝗥...`;
+                DOM.fetchOverlayText.textContent = `VERIFYING ${rawRecords.length} GCP SERVERS FOR LIVE STATUS...`;
                 
                 const validationPromises = rawRecords.map(async (host) => {
                     const isAlive = await verifyHostIsAlive(host);
@@ -973,14 +984,13 @@
                     stateMachine.currentSelectedHostList = aliveRecords;
                     stateMachine.activeHost = aliveRecords[aliveRecords.length - 1];
                     
-                    // Host hyperlink generation remains intact
                     DOM.envActiveHost.textContent = "https://" + stateMachine.activeHost;
-                    DOM.fetchOverlayText.textContent = "𝗦𝗨𝗖𝗖𝗘𝗦𝗦𝗙𝗨𝗟𝗟𝗬 𝗘𝗦𝗧𝗔𝗕𝗟𝗜𝗦𝗛𝗘𝗗 𝗖𝗢𝗡𝗡𝗘𝗖𝗧𝗜𝗢𝗡 𝗧𝗢 𝗚𝗖𝗣 𝗔𝗣𝗜";
+                    DOM.fetchOverlayText.textContent = "VERIFICATION COMPLETE: HOSTS SYNCED";
                     await new Promise(r => setTimeout(r, 800));
                     
                     DOM.fetchOverlay.classList.remove('active');
                     
-                    ToastMessageFactory.dispatch(`𝗙𝗢𝗨𝗡𝗗 [${aliveRecords.length}] 𝗔𝗖𝗧𝗜𝗩𝗘 𝗚𝗖𝗣 𝗦𝗘𝗥𝗩𝗘𝗥!`, "success");
+                    ToastMessageFactory.dispatch(`Found [${aliveRecords.length}] Active GCP Server !`, "success");
                     
                     let compiledAddresses = [...routingDictionaries.addresses]; let compiledSnis = [...routingDictionaries.snis];
                     stateMachine.currentSelectedHostList.forEach(h => { if (!compiledAddresses.includes(h)) compiledAddresses.unshift(h); if (!compiledSnis.includes(h)) compiledSnis.unshift(h); });
