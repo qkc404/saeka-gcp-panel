@@ -539,9 +539,9 @@
 
     <div id="splash-interface">
         <div class="splash-title-brand">SAEKA PANEL</div>
-        <div class="splash-developer-sub">DEVELOPED BY SAEKA TOJIRP</div>
+        <div class="splash-developer-sub">DEVELOPED BY REYMARK INDOC</div>
         <div class="splash-loader-circle"></div>
-        <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); letter-spacing: 0.25em; text-transform: uppercase;">Initializing System Matrices...</div>
+        <div style="font-family: var(--font-mono); font-size: 1.15rem; color: var(--text-muted); letter-spacing: 0.15em; text-transform: uppercase;">𝗪𝗘𝗟𝗖𝗢𝗠𝗘 𝗧𝗢 𝗦𝗔𝗘𝗞𝗔 𝗣𝗔𝗡𝗘𝗟</div>
     </div>
 
     <div id="notice-overlay">
@@ -625,7 +625,7 @@
                 <div class="glass-panel" id="panel-generation-matrix">
                     <div class="panel-headline">
                         <svg class="panel-icon-svg" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
-                        <span class="panel-headline-text">CONFIG SETUP CONFIGURATIONS</span>
+                        <span class="panel-headline-text">SERVER INPUT CONFIGURATIONS</span>
                     </div>
 
                     <div class="step-matrix-node node-locked" id="node-step-0">
@@ -639,12 +639,12 @@
                     </div>
 
                     <div class="step-matrix-node node-locked" id="node-step-2">
-                        <label class="field-lbl"><span>STEP 2: SNI Host / Fake Spoof Destination Target</span><span class="field-lbl-badge" id="lbl-badge-count-sni"> Loaded</span></label>
+                        <label class="field-lbl"><span>STEP 2: SERVER NAME INDICATION SELECTION</span><span class="field-lbl-badge" id="lbl-badge-count-sni"> Loaded</span></label>
                         <select class="interactive-selector-dropdown" id="dropdown-sni-dataset"><option value="" disabled selected>-- AWAITING FORWARD RUNTIME RESOLUTION --</option></select>
                     </div>
 
                     <div class="step-matrix-node node-locked" id="node-step-3">
-                        <label class="field-lbl">STEP 3: Core Tunnel Processing Protocol Engine</label>
+                        <label class="field-lbl">STEP 3: PROTOCOL SELECTION</label>
                         <div class="option-button-grid" id="wrapper-protocol-toggles">
                             <button class="btn-toggle-matrix ripple-btn" data-protocol-token="vless">VLESS</button>
                             <button class="btn-toggle-matrix ripple-btn" data-protocol-token="vmess">VMESS</button>
@@ -654,7 +654,7 @@
                     </div>
 
                     <div class="step-matrix-node node-locked" id="node-step-4">
-                        <label class="field-lbl">STEP 4: Physical Transport Layer Encapsulation Profile</label>
+                        <label class="field-lbl">STEP 4: SERVER TRANSPORT LAYER SELECTION</label>
                         <div class="option-button-grid transport-layout" id="wrapper-transport-toggles">
                             <button class="btn-toggle-matrix ripple-btn" data-transport-token="ws">WebSocket Protocol</button>
                             <button class="btn-toggle-matrix ripple-btn" data-transport-token="hu">HTTPUpgrade Engine</button>
@@ -662,10 +662,10 @@
                     </div>
 
                     <div class="step-matrix-node node-locked" id="node-step-5">
-                        <label class="field-lbl">STEP 5: Final Transmission Connection String URI Vector</label>
+                        <label class="field-lbl">STEP 5: Config String URI result</label>
                         <div class="payload-display-terminal">
                             <div class="terminal-header-control">
-                                <span class="terminal-headline-tag" id="lbl-terminal-protocol-tag">[ VLESS ] INTERFACE VECTOR READY</span>
+                                <span class="terminal-headline-tag" id="lbl-terminal-protocol-tag">INTERFACE VECTOR READY</span>
                                 <div class="terminal-action-cluster">
                                     <button class="btn-terminal-action btn-ping-node ripple-btn" id="action-verify-latency"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> VERIFY LATENCY</button>
                                     <button class="btn-terminal-action btn-copy-node ripple-btn" id="action-copy-payload"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"></path></svg> COPY CONFIG</button>
@@ -910,25 +910,65 @@
                 }
             }
 
+            const HostDurationManager = {
+                DURATION_MS: 5 * 60 * 60 * 1000, 
+                serverBirthTime: null, 
+
+                startCountdown: () => {
+                    const osLabel = DOM.envOs.previousElementSibling;
+                    osLabel.textContent = "SERVER DURATION"; 
+                    
+                    if (window.activeCountdown) clearInterval(window.activeCountdown);
+                    
+                    window.activeCountdown = setInterval(() => {
+                        const remaining = HostDurationManager.DURATION_MS - (Date.now() - HostDurationManager.serverBirthTime);
+                        
+                        if (remaining <= 0) {
+                            DOM.envOs.textContent = "0H 0M 0S (EXPIRED)";
+                            DOM.envOs.style.color = "var(--status-err)";
+                            clearInterval(window.activeCountdown);
+                        } else {
+                            const h = Math.floor(remaining / 3600000);
+                            const m = Math.floor((remaining % 3600000) / 60000);
+                            const s = Math.floor((remaining % 60000) / 1000);
+                            DOM.envOs.textContent = `${h}H ${m}M ${s}S`;
+                            DOM.envOs.style.color = "var(--status-warn)";
+                        }
+                    }, 1000);
+                }
+            };
+
             DOM.btnFetchTrigger.addEventListener('click', async () => {
                 DOM.fetchOverlay.classList.add('active');
-                DOM.fetchOverlayText.textContent = "CONTACTING GITHUB REMOTE STORAGE...";
+                DOM.fetchOverlayText.textContent = "𝗖𝗢𝗡𝗧𝗔𝗖𝗧𝗜𝗡𝗚 𝗚𝗢𝗢𝗚𝗟𝗘 𝗔𝗣𝗜𝗦...";
                 await new Promise(r => setTimeout(r, 800));
                 
                 let rawRecords = [];
                 try {
                     const res = await fetch('./host.txt?nocache=' + Date.now(), { cache: "no-store" });
-                    if (res.ok) { rawRecords = (await res.text()).split('\n').map(s => s.trim()).filter(s => s.length > 0 && s.includes('.run.app')); }
+                    if (res.ok) { 
+                        const lastModifiedHeader = res.headers.get('Last-Modified');
+                        if (lastModifiedHeader) {
+                            HostDurationManager.serverBirthTime = new Date(lastModifiedHeader).getTime();
+                        } else {
+                            console.warn("Server did not send Last-Modified header. Falling back to current time.");
+                            HostDurationManager.serverBirthTime = Date.now();
+                        }
+
+                        rawRecords = (await res.text()).split('\n').map(s => s.trim()).filter(s => s.length > 0 && s.includes('.run.app'));
+                    }
                 } catch (e) { }
 
-                if (rawRecords.length === 0) {
-                    DOM.fetchOverlayText.textContent = "REMOTE RESOLUTION FAILED";
+                const isExpired = HostDurationManager.serverBirthTime ? (Date.now() - HostDurationManager.serverBirthTime) >= HostDurationManager.DURATION_MS : false;
+
+                if (rawRecords.length === 0 || isExpired) {
+                    DOM.fetchOverlayText.textContent = "𝗡𝗢 𝗔𝗖𝗧𝗜𝗩𝗘 𝗢𝗥 𝗩𝗔𝗟𝗜𝗗 𝗚𝗖𝗣 𝗦𝗘𝗥𝗩𝗘𝗥𝗦 𝗙𝗢𝗨𝗡𝗗";
                     await new Promise(r => setTimeout(r, 1500));
                     DOM.fetchOverlay.classList.remove('active');
-                    return ToastMessageFactory.dispatch("Could not establish communication maps with target host cluster tracking arrays.", "error");
+                    return ToastMessageFactory.dispatch("NO VALID SERVERS FOUND OR ALL EXPIRED.", "error");
                 }
 
-                DOM.fetchOverlayText.textContent = `VERIFYING ${rawRecords.length} HOSTS FOR LIVE STATUS...`;
+                DOM.fetchOverlayText.textContent = `VERIFYING ${rawRecords.length} GCP SERVERS FOR LIVE STATUS...`;
                 
                 const validationPromises = rawRecords.map(async (host) => {
                     const isAlive = await verifyHostIsAlive(host);
@@ -950,19 +990,20 @@
                     
                     DOM.fetchOverlay.classList.remove('active');
                     
-                    ToastMessageFactory.dispatch(`Located & Verified [${aliveRecords.length}] Active GCP Server Targets!`, "success");
+                    ToastMessageFactory.dispatch(`Found [${aliveRecords.length}] Active GCP Server !`, "success");
                     
                     let compiledAddresses = [...routingDictionaries.addresses]; let compiledSnis = [...routingDictionaries.snis];
                     stateMachine.currentSelectedHostList.forEach(h => { if (!compiledAddresses.includes(h)) compiledAddresses.unshift(h); if (!compiledSnis.includes(h)) compiledSnis.unshift(h); });
                     
-                    DOM.badgeCountAddr.textContent = `[${compiledAddresses.length}] Targets Array`; DOM.badgeCountSni.textContent = `[${compiledSnis.length}] Spoofs Loaded`;
-                    DOM.dropdownAddress.innerHTML = `<option value="" disabled selected>-- CHOOSE ACTIVE TRANSMISSION FRONTING PATH --</option>` + compiledAddresses.map(a => `<option value="${a}">${a}</option>`).join('');
-                    DOM.dropdownSni.innerHTML = `<option value="" disabled selected>-- CHOOSE HOOK SNI TARGET MAPS --</option>` + compiledSnis.map(s => `<option value="${s}">${s}</option>`).join('');
+                    DOM.badgeCountAddr.textContent = `[${compiledAddresses.length}] Domains`; DOM.badgeCountSni.textContent = `[${compiledSnis.length}] Domains`;
+                    DOM.dropdownAddress.innerHTML = `<option value="" disabled selected>-- SELECT AN ADRESS DOMAIN --</option>` + compiledAddresses.map(a => `<option value="${a}">${a}</option>`).join('');
+                    DOM.dropdownSni.innerHTML = `<option value="" disabled selected>-- SELECT SNI --</option>` + compiledSnis.map(s => `<option value="${s}">${s}</option>`).join('');
                     
-                    // NEW CORRECT SPOT: This unlocks the matrix AFTER the GCP Host is securely retrieved
                     document.querySelectorAll('.step-matrix-node').forEach(node => {
                         node.classList.remove('node-locked');
                     });
+
+                    HostDurationManager.startCountdown();
                     
                 } else {
                     DOM.fetchOverlayText.textContent = "ALL SCANNED HOSTS DETECTED OFFLINE/ERROR";
