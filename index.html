@@ -806,7 +806,7 @@
                 const letterBank = ["S", "A", "E", "K", "A", "T", "O", "J", "I", "R", "P"];
 
                 function structuralResize() { DOM.canvas.width = window.innerWidth; DOM.canvas.height = window.innerHeight; }
-                structuralResize(); window.addEventListener('resize', structuralResize);
+                structuralResize();
 
                 class WireframeCube3D {
                     constructor() { this.resetPosition(); this.y = Math.random() * DOM.canvas.height; }
@@ -945,20 +945,37 @@
                 
                 let rawRecords = [];
                 try {
+                    // --- GITHUB API INTEGRATION ---
+                    // IMPORTANT: Replace these with your actual GitHub details
+                    const GITHUB_USERNAME = "Saeka-Tojirp"; // <-- CHANGE THIS
+                    const GITHUB_REPO = "Your-Repo-Name";  // <-- CHANGE THIS
+
+                    DOM.fetchOverlayText.textContent = "𝗩𝗘𝗥𝗜𝗙𝗬𝗜𝗡𝗚 𝗚𝗜𝗧𝗛𝗨𝗕 𝗣𝗨𝗦𝗛 𝗛𝗔𝗦𝗛...";
+                    
+                    // Fetch the exact commit time of host.txt
+                    const gitRes = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/commits?path=host.txt&page=1&per_page=1`);
+                    if (gitRes.ok) {
+                        const gitData = await gitRes.json();
+                        if (gitData && gitData.length > 0) {
+                            // Extract the UTC timestamp of the commit
+                            HostDurationManager.serverBirthTime = new Date(gitData.commit.committer.date).getTime();
+                        }
+                    }
+
+                    // Fallback just in case GitHub API limits us (60 req/hr for unauthenticated IP)
+                    if (!HostDurationManager.serverBirthTime) {
+                        console.warn("API limit reached or repo not found. Timer fallback triggered.");
+                        HostDurationManager.serverBirthTime = Date.now();
+                    }
+
+                    DOM.fetchOverlayText.textContent = "𝗙𝗘𝗧𝗖𝗛𝗜𝗡𝗚 𝗚𝗖𝗣 𝗥𝗨𝗡𝗧𝗜𝗠𝗘𝗦...";
                     const res = await fetch('./host.txt?nocache=' + Date.now(), { cache: "no-store" });
                     if (res.ok) { 
-                        const lastModifiedHeader = res.headers.get('Last-Modified');
-                        if (lastModifiedHeader) {
-                            HostDurationManager.serverBirthTime = new Date(lastModifiedHeader).getTime();
-                        } else {
-                            console.warn("Server did not send Last-Modified header. Falling back to current time.");
-                            HostDurationManager.serverBirthTime = Date.now();
-                        }
-
                         rawRecords = (await res.text()).split('\n').map(s => s.trim()).filter(s => s.length > 0 && s.includes('.run.app'));
                     }
                 } catch (e) { }
 
+                // Check if the commit timestamp is older than 5 hours
                 const isExpired = HostDurationManager.serverBirthTime ? (Date.now() - HostDurationManager.serverBirthTime) >= HostDurationManager.DURATION_MS : false;
 
                 if (rawRecords.length === 0 || isExpired) {
@@ -984,6 +1001,7 @@
                     stateMachine.currentSelectedHostList = aliveRecords;
                     stateMachine.activeHost = aliveRecords[aliveRecords.length - 1];
                     
+                    // Host hyperlink generation remains intact
                     DOM.envActiveHost.textContent = "https://" + stateMachine.activeHost;
                     DOM.fetchOverlayText.textContent = "VERIFICATION COMPLETE: HOSTS SYNCED";
                     await new Promise(r => setTimeout(r, 800));
