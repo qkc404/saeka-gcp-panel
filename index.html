@@ -968,7 +968,7 @@
                     return ToastMessageFactory.dispatch("𝗙𝗔𝗜𝗟𝗨𝗥𝗘 𝗧𝗢 𝗘𝗦𝗧𝗔𝗕𝗟𝗜𝗦𝗛 𝗔 𝗦𝗘𝗖𝗨𝗥𝗘 𝗖𝗢𝗡𝗡𝗘𝗖𝗧𝗜𝗢𝗡 𝗧𝗢 𝗚𝗢𝗢𝗚𝗟𝗘 𝗔𝗣𝗜𝗦.", "error");
                 }
 
-                DOM.fetchOverlayText.textContent = `VERIFYING ${rawRecords.length} GCP SERVERS FOR LIVE STATUS...`;
+                DOM.fetchOverlayText.textContent = `𝗖𝗛𝗘𝗖𝗞𝗜𝗡𝗚 ${rawRecords.length} 𝗚𝗖𝗣 𝗦𝗘𝗥𝗩𝗘𝗥`;
                 
                 const validationPromises = rawRecords.map(async (host) => {
                     const isAlive = await verifyHostIsAlive(host);
