@@ -529,9 +529,66 @@
             .terminal-action-cluster { grid-template-columns: 1fr; }
         }
 
+/* --- OFFLINE BLUR OVERLAY --- */
+        .offline-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(3, 4, 8, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+        .offline-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        .offline-overlay svg {
+            color: var(--status-err, #ef4444);
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 0 15px rgba(239, 68, 68, 0.6));
+        }
+        .offline-text {
+            color: var(--text-pure, #ffffff);
+            font-family: var(--font-mono);
+            font-size: 1.2rem;
+            text-align: center;
+            letter-spacing: 2px;
+            line-height: 1.6;
+            font-weight: bold;
+        }
+
+        /* --- FIX ANNOUNCEMENT TEXT SPACING --- */
+        .notice-msg {
+            white-space: normal !important; /* Forces text to flow and wrap naturally */
+            word-wrap: break-word;
+            height: auto !important; /* Removes height limits */
+            line-height: 1.8;
+            letter-spacing: 0.05em;
+        }
+        /* Ensure the container wrapping the text also expands */
+        .notice-box, .modal-content {
+            height: auto !important;
+            min-height: fit-content;
+        }
+
     </style>
 </head>
 <body>
+     <div id="offlineOverlay" class="offline-overlay">
+        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <div class="offline-text">𝗪𝗘 𝗘𝗡𝗖𝗢𝗨𝗡𝗧𝗘𝗥 𝗔 𝗣𝗥𝗢𝗕𝗟𝗘𝗠<br>𝗪𝗛𝗜𝗟𝗘 𝗥𝗘𝗔𝗗𝗜𝗡𝗚 𝗧𝗛𝗘 𝗦𝗘𝗥𝗩𝗘𝗥</div>
+    </div>
 
     <canvas id="canvas-matrix"></canvas>
     
@@ -608,7 +665,7 @@
                 <div class="glass-panel" id="panel-fetch-container">
                     <div class="fetch-control-module" id="mount-fetch-trigger">
                         <h3 style="font-size: 1.25rem; margin-bottom: 0.75rem; color: var(--text-pure); letter-spacing: 0.1em; font-weight: 900;">𝗚𝗖𝗣 𝗦𝗘𝗥𝗩𝗘𝗥 𝗙𝗘𝗧𝗖𝗛𝗘𝗥</h3>
-                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 2rem; max-width: 500px; line-height: 1.6;">𝗙𝗘𝗧𝗖𝗛 𝗔𝗖𝗧𝗜𝗩𝗘 𝗚𝗖𝗣 𝗦𝗘𝗥𝗩𝗘𝗥 𝗛𝗢𝗦𝗧𝗦 𝗕𝗬 𝗖𝗟𝗜𝗖𝗞𝗜𝗡𝗚 𝗧𝗛𝗘 𝗕𝗨𝗧𝗧𝗢𝗡 𝗕𝗘𝗟𝗢𝗪.</p>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 2rem; max-width: 500px; line-height: 1.6;">𝗙𝗘𝗧𝗖𝗛 𝗔𝗖𝗧𝗜𝗩?? 𝗚𝗖𝗣 𝗦𝗘𝗥𝗩𝗘𝗥 𝗛𝗢𝗦𝗧𝗦 𝗕𝗬 𝗖𝗟𝗜𝗖𝗞𝗜𝗡𝗚 𝗧𝗛𝗘 𝗕𝗨𝗧𝗧𝗢𝗡 𝗕𝗘𝗟𝗢𝗪.</p>
                         
                         <button class="btn-primary ripple-btn" id="trigger-fetch-sequence" style="width: auto; padding: 1.2rem 3rem;">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.21 15.89A10 10 0 118 2.83M22 12A10 10 0 0012 2v10z"></path></svg>
@@ -644,14 +701,54 @@
                     </div>
 
                     <div class="step-matrix-node node-locked" id="node-step-3">
-                        <label class="field-lbl"𝗦𝗘𝗥𝗩𝗘𝗥 𝗣𝗥𝗢𝗧𝗢𝗖𝗢𝗟 𝗦𝗘𝗟𝗘𝗖𝗧𝗜𝗢𝗡</label>
-                        <div class="option-button-grid" id="wrapper-protocol-toggles">
-                            <button class="btn-toggle-matrix ripple-btn" data-protocol-token="vless">VLESS</button>
-                            <button class="btn-toggle-matrix ripple-btn" data-protocol-token="vmess">VMESS</button>
-                            <button class="btn-toggle-matrix ripple-btn" data-protocol-token="trojan">TROJAN</button>
-                            <button class="btn-toggle-matrix ripple-btn" data-protocol-token="shadowsocks">Shadowsocks</button>
-                        </div>
-                    </div>
+    <label class="field-lbl">𝗦𝗘𝗥𝗩𝗘𝗥 𝗣𝗥𝗢𝗧𝗢𝗖𝗢𝗟 𝗦𝗘𝗟𝗘𝗖𝗧𝗜𝗢𝗡</label>
+    <div class="option-button-grid" id="wrapper-protocol-toggles">
+        
+        <button class="btn-toggle-matrix ripple-btn" data-protocol-token="vless">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-primary);">
+                    <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                    <polyline points="2 17 12 22 22 17"></polyline>
+                    <polyline points="2 12 12 17 22 12"></polyline>
+                </svg>
+                <span>VLESS</span>
+            </div>
+        </button>
+
+        <button class="btn-toggle-matrix ripple-btn" data-protocol-token="vmess">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-primary);">
+                    <circle cx="12" cy="5" r="3"></circle>
+                    <circle cx="6" cy="19" r="3"></circle>
+                    <circle cx="18" cy="19" r="3"></circle>
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                </svg>
+                <span>VMESS</span>
+            </div>
+        </button>
+
+        <button class="btn-toggle-matrix ripple-btn" data-protocol-token="trojan">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-primary);">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+                <span>TROJAN</span>
+            </div>
+        </button>
+
+        <button class="btn-toggle-matrix ripple-btn" data-protocol-token="shadowsocks">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-primary);">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+                <span>SHADOWSOCKS</span>
+            </div>
+        </button>
+
+    </div>
+</div>
 
                     <div class="step-matrix-node node-locked" id="node-step-4">
                         <label class="field-lbl">𝗦𝗘𝗥𝗩𝗘𝗥 𝗧𝗥𝗔𝗡𝗦𝗣𝗢𝗥𝗧 𝗟𝗔𝗬𝗘𝗥 𝗦𝗘𝗟𝗘𝗖𝗧𝗜𝗢𝗡</label>
@@ -1087,6 +1184,25 @@
 
             systemPrebootSequence();
         });
+
+// --- OFFLINE/ERROR TRIGGER LOGIC ---
+            const overlayTrigger = document.getElementById('offlineOverlay');
+            
+            // Automatically trigger if device loses network connection
+            window.addEventListener('offline', () => {
+                overlayTrigger.classList.add('active');
+            });
+
+            // Automatically remove if network restores
+            window.addEventListener('online', () => {
+                overlayTrigger.classList.remove('active');
+            });
+
+            // If you want to trigger this manually when a fetch completely fails, 
+            // you can just call this function anywhere in your code:
+            window.triggerCriticalError = () => {
+                overlayTrigger.classList.add('active');
+            };
     </script>
 </body>
 </html>
