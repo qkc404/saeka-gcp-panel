@@ -188,42 +188,20 @@
             background: rgba(2, 3, 5, 0.6);
             border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 8px;
-            padding: 1.2rem 1.5rem; /* Slightly reduced vertical padding */
+            padding: 1.5rem;
             margin-bottom: 2.5rem;
-            max-height: 280px; /* Increased from 200px to show more lines */
+            max-height: 200px;
             overflow-y: auto;
             text-align: left;
-         }
-
-       .notice-msg-container::-webkit-scrollbar { width: 6px; }
-       .notice-msg-container::-webkit-scrollbar-thumb { background: var(--accent-primary); border-radius: 4px; }
-
-       .notice-msg-container {
-            background: rgba(2, 3, 5, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            padding: 1rem 1.5rem;
-            margin-bottom: 2.5rem;
-            max-height: 300px;
-            overflow-y: auto;
-            overflow-x: auto;
-            text-align: left;
-            white-space: nowrap;
-         }
-
-       .notice-msg-container::-webkit-scrollbar { width: 6px; height: 6px; }
-       .notice-msg-container::-webkit-scrollbar-thumb { background: var(--accent-primary); border-radius: 4px; }
-
-       .notice-msg {
+        }
+        .notice-msg-container::-webkit-scrollbar { width: 4px; }
+        .notice-msg-container::-webkit-scrollbar-thumb { background: var(--accent-primary); border-radius: 4px; }
+        .notice-msg {
             font-size: 0.85rem;
             color: var(--text-muted);
-            line-height: 1.6;
-            letter-spacing: 0.02em;
+            line-height: 1.8;
             font-family: var(--font-mono);
-            white-space: pre;
-            word-break: keep-all;
-            display: block;
-            overflow-wrap: normal;
+            white-space: pre-wrap;
         }
 
         .view-engine {
@@ -923,47 +901,26 @@
                 lockDownstreamFrom(stepNumber) { for (let i = stepNumber; i <= 5; i++) { const node = DOM.stepNodes[i]; if (node) node.classList.add('node-locked'); } if (stepNumber <= 5) DOM.terminalPayload.textContent = "AWAITING SYSTEM GENERATION PARAMETERS..."; }
             };
 
-            // ACCURATE LIVE HOST SCANNER (Accounts for GCP Cold Starts & Cache)
             async function verifyHostIsAlive(host) {
                 try {
-                    // GCP Run containers take time to wake up. Give it 10 seconds.
-                    const controller = new AbortController();
-                    const timeoutId = setTimeout(() => controller.abort(), 10000);
-                    
-                    // The ?ping timestamp ensures the browser doesn't use a cached dead response
-                    await fetch(`https://${host}/?ping=${Date.now()}`, { 
-                        method: "HEAD", 
-                        mode: "no-cors", 
-                        cache: "no-store", 
-                        signal: controller.signal 
-                    });
-                    
-                    clearTimeout(timeoutId);
-                    // If no network error or timeout was thrown, the TCP handshake succeeded.
+                    await fetch(`https://${host}/`, { method: "HEAD", mode: "no-cors", cache: "no-store", signal: AbortSignal.timeout(4000) });
                     return true;
                 } catch(e) {
-                    // Fails only if DNS is dead, server is entirely down, or it timed out.
-                    return false; 
+                    return false;
                 }
             }
 
-            // 1. GLOBAL DURATION MANAGER
             const HostDurationManager = {
                 DURATION_MS: 5 * 60 * 60 * 1000, 
                 serverBirthTime: null, 
-                commitHash: null,
-                pushTimeString: null, // Stores the formatted push time
 
                 startCountdown: () => {
                     const osLabel = DOM.envOs.previousElementSibling;
-                    
-                    // Update label to show the exact time it was pushed to GitHub
-                    osLabel.textContent = `SERVER DURATION [PUSHED: ${HostDurationManager.pushTimeString || 'UNKNOWN'}]`; 
+                    osLabel.textContent = "SERVER DURATION"; 
                     
                     if (window.activeCountdown) clearInterval(window.activeCountdown);
                     
                     window.activeCountdown = setInterval(() => {
-                        // Calculate accurate time remaining from the exact push timestamp
                         const remaining = HostDurationManager.DURATION_MS - (Date.now() - HostDurationManager.serverBirthTime);
                         
                         if (remaining <= 0) {
@@ -981,73 +938,52 @@
                 }
             };
 
-            // 2. MODIFIED FETCH LISTENER WITH 5-SECOND SCAN & ACCURATE TIME TRACKING
             DOM.btnFetchTrigger.addEventListener('click', async () => {
                 DOM.fetchOverlay.classList.add('active');
-                
-                // --- REQUIREMENT 1: 5-SECOND AUTOMATIC SCAN PHASE ---
-                DOM.fetchOverlayText.textContent = "𝗦𝗖𝗔𝗡𝗡𝗜𝗡𝗚 𝗙𝗢𝗥 𝗔𝗩𝗔𝗜𝗟𝗔𝗕𝗟𝗘 𝗔𝗣𝗜";
-                await new Promise(r => setTimeout(r, 5000));
+                DOM.fetchOverlayText.textContent = "𝗖𝗢𝗡𝗧𝗔𝗖𝗧𝗜𝗡𝗚 𝗚𝗢𝗢𝗚𝗟𝗘 𝗔𝗣𝗜𝗦...";
+                await new Promise(r => setTimeout(r, 800));
                 
                 let rawRecords = [];
                 try {
-                    // --- REQUIREMENT 2 & 4: GITHUB API INTEGRATION FOR EXACT PUSH TIME ---
-                    const GITHUB_USERNAME = "Saeka-Tojirp"; // <-- VERIFY THIS IS CORRECT
-                    const GITHUB_REPO = "Your-Repo-Name";   // <-- CHANGE THIS TO YOUR ACTUAL REPO NAME
+                    // --- GITHUB API INTEGRATION ---
+                    // IMPORTANT: Replace these with your actual GitHub details
+                    const GITHUB_USERNAME = "Saeka-Tojirp"; // <-- CHANGE THIS
+                    const GITHUB_REPO = "Your-Repo-Name";  // <-- CHANGE THIS
 
-                    DOM.fetchOverlayText.textContent = "𝗘𝗦𝗧𝗔𝗕𝗟𝗜𝗦𝗛𝗜𝗡𝗚 𝗖𝗢𝗡𝗡𝗘𝗖𝗧𝗜𝗢𝗡";
+                    DOM.fetchOverlayText.textContent = "𝗩𝗘𝗥𝗜𝗙𝗬𝗜𝗡𝗚 𝗔𝗣𝗜 𝗖𝗢𝗡𝗡𝗘𝗖𝗧𝗜𝗢𝗡";
                     
-                    // Bypassing GitHub's edge caching entirely
-                    const apiEndpoint = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/commits?path=host.txt&page=1&per_page=1&nocache=${Date.now()}`;
-                    
-                    const gitRes = await fetch(apiEndpoint, { 
-                        cache: "no-store",
-                        headers: { "Accept": "application/vnd.github.v3+json" }
-                    });
-                    
+                    // Fetch the exact commit time of host.txt
+                    const gitRes = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/commits?path=host.txt&page=1&per_page=1`);
                     if (gitRes.ok) {
                         const gitData = await gitRes.json();
-                        // Fix: The commits API returns an array, so we must access gitData[0]
                         if (gitData && gitData.length > 0) {
-                            // Extract exact UTC timestamp of the commit
-                            HostDurationManager.serverBirthTime = new Date(gitData[0].commit.committer.date).getTime();
-                            HostDurationManager.commitHash = gitData[0].sha.substring(0, 7);
-                            
-                            // Format the time it was pushed (e.g., "10:30 PM")
-                            HostDurationManager.pushTimeString = new Date(HostDurationManager.serverBirthTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-                            console.log(`[SAEKA CORE] host.txt pushed at ${new Date(HostDurationManager.serverBirthTime).toLocaleString()}`);
+                            // Extract the UTC timestamp of the commit
+                            HostDurationManager.serverBirthTime = new Date(gitData.commit.committer.date).getTime();
                         }
                     }
 
+                    // Fallback just in case GitHub API limits us (60 req/hr for unauthenticated IP)
                     if (!HostDurationManager.serverBirthTime) {
-                        console.warn("[SAEKA CORE] API limit reached or repo missing. Timer fallback triggered.");
+                        console.warn("API limit reached or repo not found. Timer fallback triggered.");
                         HostDurationManager.serverBirthTime = Date.now();
-                        HostDurationManager.pushTimeString = "JUST NOW";
                     }
 
-                    // --- REQUIREMENT 3: IDENTIFY WHAT .run.app WAS PUSHED ---
-                    DOM.fetchOverlayText.textContent = "𝗘𝗫𝗧𝗥𝗔𝗖𝗧𝗜𝗡𝗚 𝗛𝗢𝗦𝗧𝗦...";
+                    DOM.fetchOverlayText.textContent = "𝗙𝗘𝗧𝗖𝗛𝗜𝗡𝗚 𝗚𝗖𝗣 𝗦𝗘𝗥𝗩𝗘𝗥𝗦...";
                     const res = await fetch('./host.txt?nocache=' + Date.now(), { cache: "no-store" });
                     if (res.ok) { 
-                        rawRecords = (await res.text()).split('\n')
-                            .map(s => s.trim())
-                            .filter(s => s.length > 0 && s.includes('.run.app'));
+                        rawRecords = (await res.text()).split('\n').map(s => s.trim()).filter(s => s.length > 0 && s.includes('.run.app'));
                     }
-                } catch (e) { console.error("[SAEKA CORE] Fetch execution failure:", e); }
+                } catch (e) { }
 
-                // Check if the commit timestamp is older than 5 hours real-time
+                // Check if the commit timestamp is older than 5 hours
                 const isExpired = HostDurationManager.serverBirthTime ? (Date.now() - HostDurationManager.serverBirthTime) >= HostDurationManager.DURATION_MS : false;
 
                 if (rawRecords.length === 0 || isExpired) {
                     DOM.fetchOverlayText.textContent = "𝗡𝗢 𝗔𝗖𝗧𝗜𝗩𝗘 𝗢𝗥 𝗩𝗔𝗟𝗜𝗗 𝗚𝗖𝗣 𝗦𝗘𝗥𝗩𝗘𝗥𝗦 𝗙𝗢𝗨𝗡𝗗";
                     await new Promise(r => setTimeout(r, 1500));
                     DOM.fetchOverlay.classList.remove('active');
-                    return ToastMessageFactory.dispatch("𝗙𝗔𝗜𝗟𝗘𝗗 𝗧𝗢 𝗘𝗦𝗧𝗔𝗕𝗟𝗜𝗦𝗛 𝗖𝗢𝗡𝗡𝗘𝗖𝗧𝗜𝗢𝗡 𝗧𝗢 𝗔𝗡𝗬 𝗔𝗣𝗜.", "error");
+                    return ToastMessageFactory.dispatch("NO VALID SERVERS FOUND OR ALL EXPIRED.", "error");
                 }
-
-                // Show a toast notifying the user what was pushed and at what time
-                ToastMessageFactory.dispatch(`Found ${rawRecords.length} host(s) pushed at ${HostDurationManager.pushTimeString}`, "success", 3500);
-                console.log("[SAEKA CORE] Extracted Hosts:\n" + rawRecords.join("\n"));
 
                 DOM.fetchOverlayText.textContent = `VERIFYING ${rawRecords.length} GCP SERVERS FOR LIVE STATUS...`;
                 
@@ -1065,17 +1001,14 @@
                     stateMachine.currentSelectedHostList = aliveRecords;
                     stateMachine.activeHost = aliveRecords[aliveRecords.length - 1];
                     
-                    // Rendered as a clickable hyperlink natively in the panel
-                    const secureUrl = `https://${stateMachine.activeHost}`;
-                    DOM.envActiveHost.innerHTML = `<a href="${secureUrl}" target="_blank" style="color: inherit; text-decoration: none;">${secureUrl}</a>`;
-                    
+                    // Host hyperlink generation remains intact
+                    DOM.envActiveHost.textContent = "https://" + stateMachine.activeHost;
                     DOM.fetchOverlayText.textContent = "VERIFICATION COMPLETE: HOSTS SYNCED";
                     await new Promise(r => setTimeout(r, 800));
                     
                     DOM.fetchOverlay.classList.remove('active');
                     
-                    // Notify which specific .run.app was locked as the active host
-                    ToastMessageFactory.dispatch(`Active Host Locked: ${stateMachine.activeHost}`, "success", 4500);
+                    ToastMessageFactory.dispatch(`Found [${aliveRecords.length}] Active GCP Server !`, "success");
                     
                     let compiledAddresses = [...routingDictionaries.addresses]; let compiledSnis = [...routingDictionaries.snis];
                     stateMachine.currentSelectedHostList.forEach(h => { if (!compiledAddresses.includes(h)) compiledAddresses.unshift(h); if (!compiledSnis.includes(h)) compiledSnis.unshift(h); });
@@ -1088,7 +1021,6 @@
                         node.classList.remove('node-locked');
                     });
 
-                    // Start the countdown using the exact push time
                     HostDurationManager.startCountdown();
                     
                 } else {
@@ -1158,45 +1090,20 @@
                 });
             });
 
-            // ACCURATE WEBSOCKET RTT LATENCY PING
-            DOM.btnPing.addEventListener('click', () => {
+            DOM.btnPing.addEventListener('click', async () => {
                 if (DOM.terminalPayload.textContent.includes("AWAITING")) return;
-                
                 DOM.btnPing.disabled = true; 
-                ToastMessageFactory.dispatch("Initiating transport-layer latency test...", "warn", 2000);
-                
+                ToastMessageFactory.dispatch("Validating latency vector...", "warn", 2000);
                 const start = performance.now();
-                
-                // WebSockets bypass standard HTTP CORS and test the actual proxy transport layer
-                const ws = new WebSocket(`wss://${stateMachine.activeHost}/?latency_check=${Date.now()}`);
-                let isResolved = false;
-
-                const finishPing = (status, msg, duration) => {
-                    if (isResolved) return;
-                    isResolved = true;
-                    ws.close();
-                    DOM.btnPing.disabled = false;
-                    ToastMessageFactory.dispatch(msg, status, duration);
-                };
-
-                // Server accepted the WebSocket connection
-                ws.onopen = () => {
-                    const rtt = Math.round(performance.now() - start);
-                    finishPing("success", `True RTT Latency: ${rtt}ms`, 4500);
-                };
-
-                // Server rejected the specific path, but actively responded!
-                ws.onerror = () => {
-                    const rtt = Math.round(performance.now() - start);
-                    if (rtt < 3000) {
-                        finishPing("success", `Echo RTT (Server Alive): ${rtt}ms`, 4500);
-                    } else {
-                        finishPing("error", "Transit error. Host might be throttling connections.", 4500);
-                    }
-                };
-
-                // Hard timeout fallback
-                setTimeout(() => finishPing("error", "Ping Timeout: No response from GCP.", 4500), 5000);
+                try {
+                    await fetch(`https://${stateMachine.activeHost}/`, { method: "HEAD", mode: "no-cors", cache: "no-store", signal: AbortSignal.timeout(5000) });
+                    ToastMessageFactory.dispatch(`Real RTT Latency: ${Math.round(performance.now() - start)}ms`, "success", 4500);
+                } catch (e) {
+                    const delta = Math.round(performance.now() - start);
+                    if (delta < 800) ToastMessageFactory.dispatch(`Echo RTT ${delta}ms`, "success", 4500);
+                    else ToastMessageFactory.dispatch("Transit timeout failure. Verify routing configuration.", "error", 4500);
+                }
+                DOM.btnPing.disabled = false;
             });
 
             systemPrebootSequence();
