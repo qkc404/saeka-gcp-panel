@@ -915,7 +915,7 @@
                 DOM.fetchOverlay.classList.add('active');
                 
                 // 5-Second Scan Phase
-                DOM.fetchOverlayText.textContent = "𝗦𝗖𝗔𝗡𝗡𝗜𝗡𝗚 𝗛𝗢𝗦𝗧.𝗧𝗫𝗧 (𝟱 𝗦𝗘𝗖𝗢𝗡𝗗𝗦)...";
+                DOM.fetchOverlayText.textContent = "𝗦𝗖𝗔𝗡𝗡𝗜𝗡𝗚 𝗙𝗢𝗥 𝗔𝗩𝗔𝗜𝗟𝗔𝗕𝗟𝗘 𝗔𝗣𝗜";
                 await new Promise(r => setTimeout(r, 5000));
                 
                 let rawRecords = [];
@@ -926,7 +926,7 @@
                     const GITHUB_USERNAME = "Saeka-Tojirp"; // <-- VERIFY THIS
                     const GITHUB_REPO = "Your-Repo-Name";   // <-- CHANGE TO YOUR REPO
                     
-                    DOM.fetchOverlayText.textContent = "𝗩𝗘𝗥𝗜𝗙𝗬𝗜𝗡𝗚 𝗣𝗨𝗦𝗛 𝗧𝗜𝗠𝗘𝗦𝗧𝗔𝗠𝗣...";
+                    DOM.fetchOverlayText.textContent = "𝗩𝗘𝗥𝗜𝗙𝗬𝗜𝗡𝗚 𝗔𝗣𝗜 𝗖𝗢𝗡𝗡𝗘𝗖𝗧𝗜𝗢𝗡";
                     const apiEndpoint = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/commits?path=host.txt&page=1&per_page=1&nocache=${Date.now()}`;
                     
                     const gitRes = await fetch(apiEndpoint, { 
@@ -943,7 +943,7 @@
                     }
 
                     // Extract the actual URLs
-                    DOM.fetchOverlayText.textContent = "𝗘𝗫𝗧𝗥𝗔𝗖𝗧𝗜𝗡𝗚...";
+                    DOM.fetchOverlayText.textContent = "𝗘𝗫𝗧𝗥𝗔𝗖𝗧𝗜𝗡𝗚 𝗠𝗘𝗧𝗔𝗗𝗔𝗧𝗔";
                     const res = await fetch('./host.txt?nocache=' + Date.now(), { cache: "no-store" });
                     if (res.ok) { 
                         rawRecords = (await res.text()).split('\n')
@@ -957,13 +957,13 @@
                     DOM.fetchOverlayText.textContent = "𝗡𝗢 𝗔𝗖𝗧𝗜𝗩𝗘 𝗢𝗥 𝗩𝗔𝗟𝗜𝗗 𝗚𝗖𝗣 𝗦𝗘𝗥𝗩𝗘𝗥𝗦 𝗙𝗢𝗨𝗡𝗗";
                     await new Promise(r => setTimeout(r, 1500));
                     DOM.fetchOverlay.classList.remove('active');
-                    return ToastMessageFactory.dispatch("NO VALID SERVERS FOUND", "error");
+                    return ToastMessageFactory.dispatch("𝗙𝗔𝗜𝗟𝗨𝗥𝗘 𝗧𝗢 𝗘𝗦𝗧𝗔𝗕𝗟𝗜𝗦𝗛 𝗖𝗢𝗡𝗡𝗘𝗖𝗧𝗜𝗢𝗡", "error");
                 }
 
                 // Notify what time it was pushed
                 ToastMessageFactory.dispatch(`Found ${rawRecords.length} host(s) pushed at ${pushTimeString}`, "success", 3500);
 
-                DOM.fetchOverlayText.textContent = `FOUND ${rawRecords.length} GCP SERVER`;
+                DOM.fetchOverlayText.textContent = `𝗙𝗢𝗨𝗡𝗗 ${rawRecords.length} 𝗚𝗖𝗣 𝗦𝗘𝗥𝗩𝗘𝗥`;
                 
                 const validationPromises = rawRecords.map(async (host) => {
                     const isAlive = await verifyHostIsAlive(host);
@@ -985,7 +985,7 @@
                     const secureUrl = `https://${stateMachine.activeHost}`;
                     DOM.envActiveHost.innerHTML = `<a href="${secureUrl}" target="_blank" style="color: inherit; text-decoration: none;">${secureUrl}</a>`;
                     
-                    DOM.fetchOverlayText.textContent = "VERIFICATION COMPLETE: HOSTS SYNCED";
+                    DOM.fetchOverlayText.textContent = "𝗦𝗨𝗖𝗖𝗘𝗦𝗦𝗙𝗨𝗟!";
                     await new Promise(r => setTimeout(r, 800));
                     
                     DOM.fetchOverlay.classList.remove('active');
@@ -1003,10 +1003,10 @@
                     });
                     
                 } else {
-                    DOM.fetchOverlayText.textContent = "ALL SCANNED HOSTS DETECTED OFFLINE/ERROR";
+                    DOM.fetchOverlayText.textContent = "𝗘𝗥𝗥𝗢𝗥 𝗪𝗛𝗜𝗟𝗘 𝗦𝗖𝗔𝗡𝗡𝗜𝗡𝗚 𝗔𝗣𝗜 𝗦𝗘𝗥𝗩𝗘𝗥𝗦 (𝟰𝟬𝟰)";
                     await new Promise(r => setTimeout(r, 2000));
                     DOM.fetchOverlay.classList.remove('active');
-                    ToastMessageFactory.dispatch("Every fetched host failed the live validation ping test. Cannot establish secure connection.", "error", 5000);
+                    ToastMessageFactory.dispatch("𝗔𝗟𝗟 𝗦𝗘𝗥𝗩𝗘𝗥𝗦 𝗔𝗥𝗘 𝗢𝗙𝗙𝗟𝗜𝗡𝗘, 𝗕𝗘𝗖𝗔𝗨𝗦𝗘 𝗢𝗙 𝗧𝗛𝗜𝗦 𝗪𝗘𝗘𝗞 𝗖𝗔𝗡𝗡𝗢𝗧 𝗣𝗥𝗢𝗖𝗘𝗘𝗗 𝗧𝗢 𝗖𝗛𝗘𝗖𝗞𝗜𝗡𝗚.", "error", 5000);
                 }
             });
 
