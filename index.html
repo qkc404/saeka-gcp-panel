@@ -197,13 +197,19 @@
         .notice-msg-container::-webkit-scrollbar { width: 4px; }
         .notice-msg-container::-webkit-scrollbar-thumb { background: var(--accent-primary); border-radius: 4px; }
         .notice-msg {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            line-height: 1.8;
-            font-family: var(--font-mono);
-            white-space: pre-wrap;
+            white-space: pre-wrap !important; /* Preserves your line breaks (\n) and spacing exactly */
+            word-wrap: break-word;
+            word-break: break-word;
+            height: auto !important; /* Removes height limits */
+            line-height: 1.6;
+            letter-spacing: 0.05em;
         }
-
+        /* Ensure the container wrapping the text also expands */
+        .notice-box, .modal-content {
+            height: auto !important;
+            min-height: fit-content;
+        }
+        
         .view-engine {
             position: absolute;
             inset: 0;
