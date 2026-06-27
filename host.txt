@@ -1,1 +1,1 @@
-firebdtest-pvve257koq-uc.a.run.app
+firebd-4fsa3obfvq-uc.a.run.app
