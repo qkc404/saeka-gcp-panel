@@ -1,2 +1,1 @@
-visionnet-2ofq5ome6q-uc.a.run.app
-firebd1-rdmpy3anua-uc.a.run.app
+firebd2-o4mfkd2kja-uc.a.run.app
