@@ -3,4 +3,3 @@ subnet-3hw6b54aea-uc.a.run.app
 visiontest-3hw6b54aea-uc.a.run.app
 firebd5-im5mxnpqta-uc.a.run.app
 free-3hw6b54aea-uc.a.run.app
-paid-aatzupdfvq-uc.a.run.app
