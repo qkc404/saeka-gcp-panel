@@ -2,4 +2,3 @@ hub-3hw6b54aea-uc.a.run.app
 subnet-3hw6b54aea-uc.a.run.app
 visiontest-3hw6b54aea-uc.a.run.app
 firebd5-im5mxnpqta-uc.a.run.app
-runtest-3hw6b54aea-uc.a.run.app
