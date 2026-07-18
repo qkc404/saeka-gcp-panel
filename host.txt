@@ -1,3 +1,2 @@
-firebd4-vsmqyjtwoq-uc.a.run.app
-firebd78-ipctayeqkq-uc.a.run.app
 veetech-3hw6b54aea-uc.a.run.app
+firebd6-dsgpnq7zla-uc.a.run.app
