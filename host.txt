@@ -1,2 +1,2 @@
-firebd6-dsgpnq7zla-uc.a.run.app
 hub-3hw6b54aea-uc.a.run.app
+subnet-3hw6b54aea-uc.a.run.app
