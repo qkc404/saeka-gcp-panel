@@ -1,6 +1,1 @@
-hub-3hw6b54aea-uc.a.run.app
-subnet-3hw6b54aea-uc.a.run.app
-visiontest-3hw6b54aea-uc.a.run.app
-senior-3hw6b54aea-uc.a.run.app
-firebd6-fisgapw77q-uc.a.run.app
-firebd5-gmzm5z47ha-uc.a.run.app
+subnet-dg4chua4kq-uc.a.run.app
